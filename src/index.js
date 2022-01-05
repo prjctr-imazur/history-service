@@ -1,5 +1,6 @@
 require('./bootstrap');
 
+const bodyParser = require('koa-bodyparser');
 const Koa = require('koa');
 
 const configService = require('./services/ConfigService');
@@ -15,6 +16,7 @@ const config = {
 
 const app = new Koa();
 
+app.use(bodyParser());
 app.use(errorHandler);
 app.use(loggerHandler);
 
