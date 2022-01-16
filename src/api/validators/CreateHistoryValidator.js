@@ -1,11 +1,13 @@
 const joi = require('joi');
 
-const Validator = require('./Validator');
+const RequestValidator = require('./RequestValidator');
 
-class CreateHistoryValidator extends Validator {
+class CreateHistoryValidator extends RequestValidator {
   rules = joi.object().keys({
-    userId: joi.number().required(),
-    videoId: joi.number().required(),
+    body: joi.object({
+      userId: joi.number().required(),
+      videoId: joi.number().required(),
+    }),
   });
 }
 
