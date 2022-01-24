@@ -15,13 +15,14 @@
   "license": "ISC",
   "dependencies": {
     "dotenv-defaults": "3.0.0",
+    "ioredis": "^4.28.3",
     "joi": "17.5.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "2.13.4",
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.1.1",
     "lodash": "4.17.21",
-    "node-http-proxy": "0.2.4",
+    "node-http-proxy": "^0.1.5",
     "pg": "8.7.1",
     "sequelize": "7.0.0-alpha.4",
     "winston": "3.3.3"

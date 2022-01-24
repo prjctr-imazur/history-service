@@ -1,29 +1,42 @@
 const { validate } = require('../middleware/validation');
+const { respond } = require('../helpers/respond');
 
 const CreateHistoryValidator = require('../validators/CreateHistoryValidator');
 const CreateHistoryController = require('../controllers/CreateHistoryController');
 const HistoryValidator = require('../validators/HistoryValidator');
 const HistoryController = require('../controllers/HistoryController');
 
+const ForeverCacheDecorator = require('../../decorators/ForeverCacheDecorator');
+const RemoveCacheDecorator = require('../../decorators/RemoveCacheDecorator');
+
 function register(router) {
   router.get('/history', validate(new HistoryValidator()), async (ctx) => {
-    const controller = new HistoryController();
+    const { userId, limit } = ctx.request.query;
 
-    const data = await controller.handle(ctx.request.query);
+    const controller = new ForeverCacheDecorator(
+      new HistoryController(),
+      `users.${userId}.history`
+    );
 
-    ctx.body = { data };
+    const data = await controller.handle({ userId, limit });
+
+    return data ? respond(ctx, data) : respond(ctx, null, 404);
   });
 
   router.post(
     '/history',
     validate(new CreateHistoryValidator()),
     async (ctx) => {
-      const controller = new CreateHistoryController();
-      const data = await controller.handle(ctx.request.body);
+      const { userId, videoId } = ctx.request.body;
 
-      ctx.body = {
-        data,
-      };
+      const controller = new RemoveCacheDecorator(
+        new CreateHistoryController(),
+        `users.${userId}.history`
+      );
+
+      const data = await controller.handle({ userId, videoId });
+
+      return data ? respond(ctx, data) : respond(ctx, null, 400);
     }
   );
 }
